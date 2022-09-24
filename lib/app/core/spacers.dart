@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomSpacers {
   CustomSpacers._();
-  
+
   static Widget height2 = SizedBox(height: 2.h);
   static Widget height4 = SizedBox(height: 4.h);
   static Widget height6 = SizedBox(height: 6.h);

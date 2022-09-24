@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:restaurant/app/atoms/helper_ui.dart';
 import 'package:restaurant/app/core/constants.dart';
 import 'package:restaurant/app/core/product_json.dart';
@@ -22,6 +23,7 @@ class ProductlistingController extends GetxController with HelperUI {
 
   @override
   void onClose() {
+    Hive.box("popular").close();
     super.onClose();
   }
 
