@@ -64,7 +64,7 @@ class ProductlistingView extends GetView<ProductlistingController>
             return controller.productsModel == null
                 ? getProgressIndicator()
                 : RefreshIndicator(
-                    onRefresh: () => controller.fetchCategory(refresh: true),
+                    onRefresh: () => controller.fetchCategory(),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

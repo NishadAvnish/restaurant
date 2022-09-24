@@ -29,12 +29,10 @@ class ProductlistingController extends GetxController with HelperUI {
     super.onClose();
   }
 
-  Future<void> fetchCategory({bool? refresh = false}) async {
-    if (refresh!) showLoadingDialog();
+  Future<void> fetchCategory() async {
     await Future.delayed(const Duration(seconds: 1));
     productsModel = ProductsModel.fromJson(json);
     getPopularitemList();
-    if (refresh) hideLoadingDialog();
   }
 
   void updateAddedItem(Category item, int quantity) {
