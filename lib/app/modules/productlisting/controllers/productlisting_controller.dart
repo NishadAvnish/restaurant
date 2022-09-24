@@ -20,7 +20,7 @@ class ProductlistingController extends GetxController with HelperUI {
   @override
   void onReady() {
     super.onReady();
-    _fetchCategory();
+    fetchCategory();
   }
 
   @override
@@ -29,10 +29,12 @@ class ProductlistingController extends GetxController with HelperUI {
     super.onClose();
   }
 
-  Future<void> _fetchCategory() async {
+  Future<void> fetchCategory({bool? refresh = false}) async {
+    if (refresh!) showLoadingDialog();
     await Future.delayed(const Duration(seconds: 1));
     productsModel = ProductsModel.fromJson(json);
     getPopularitemList();
+    if (refresh) hideLoadingDialog();
   }
 
   void updateAddedItem(Category item, int quantity) {
@@ -123,12 +125,13 @@ class ProductlistingController extends GetxController with HelperUI {
       popularItems.add(item);
     }
     productsModel?.popular = popularItems;
+    print(productsModel?.popular?.length);
     update();
   }
 
   Future<void> addPopularItems(Category dataModel) async {
     final box = Boxes.getTransaction();
-    if (box.get(dataModel.id) == null) return;
+    if (box.get(dataModel.id) != null) return;
     HiveDataModel? savedProduct = box.get(dataModel.id);
     if (box.keys.length >= 5) {
       box.deleteAt(0);
