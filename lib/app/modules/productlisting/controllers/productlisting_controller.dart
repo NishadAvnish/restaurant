@@ -128,6 +128,7 @@ class ProductlistingController extends GetxController with HelperUI {
 
   Future<void> addPopularItems(Category dataModel) async {
     final box = Boxes.getTransaction();
+    if (box.get(dataModel.id) == null) return;
     HiveDataModel? savedProduct = box.get(dataModel.id);
     if (box.keys.length >= 5) {
       box.deleteAt(0);
