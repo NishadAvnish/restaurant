@@ -4,6 +4,8 @@ import 'package:hive/hive.dart';
 import 'package:restaurant/app/atoms/helper_ui.dart';
 import 'package:restaurant/app/core/constants.dart';
 import 'package:restaurant/app/core/product_json.dart';
+import 'package:restaurant/app/database/boxes.dart';
+import 'package:restaurant/app/models/hive_model.dart';
 import 'package:restaurant/app/models/products_model.dart';
 
 class ProductlistingController extends GetxController with HelperUI {
@@ -30,7 +32,7 @@ class ProductlistingController extends GetxController with HelperUI {
   Future<void> _fetchCategory() async {
     await Future.delayed(const Duration(seconds: 1));
     productsModel = ProductsModel.fromJson(json);
-    update();
+    getPopularitemList();
   }
 
   void updateAddedItem(Category item, int quantity) {
@@ -56,52 +58,88 @@ class ProductlistingController extends GetxController with HelperUI {
     update(["PRICE"]);
   }
 
-  void placeOrder(BuildContext context) {
-    addedItem.forEach((element) {});
-    price = 0;
-    // clear Salad Quantity
+  Future<void> placeOrder(BuildContext context) async {
+    showLoadingDialog();
+    for (var element in addedItem) {
+      await addPopularItems(element);
+    }
+
+    // clear popular
     for (var ele in productsModel!.popular!) {
-      addedItem.forEach((addedItem) {
+      for (var addedItem in addedItem) {
         if (addedItem.id == ele.id) {
           ele.update(0);
         }
-      });
+      }
     }
 
     //clear salad
     for (var ele in productsModel!.salads!) {
-      addedItem.forEach((addedItem) {
+      for (var addedItem in addedItem) {
         if (addedItem.id == ele.id) {
           ele.update(0);
         }
-      });
+      }
     }
     //clear soup
     for (var ele in productsModel!.soup!) {
-      addedItem.forEach((addedItem) {
+      for (var addedItem in addedItem) {
         if (addedItem.id == ele.id) {
           ele.update(0);
         }
-      });
+      }
     }
     //clear chicken
     for (var ele in productsModel!.chicken!) {
-      addedItem.forEach((addedItem) {
+      for (var addedItem in addedItem) {
         if (addedItem.id == ele.id) {
           ele.update(0);
         }
-      });
+      }
     }
     //fruits
     for (var ele in productsModel!.fruits!) {
-      addedItem.forEach((addedItem) {
+      for (var addedItem in addedItem) {
         if (addedItem.id == ele.id) {
           ele.update(0);
         }
-      });
+      }
+    }
+    hideLoadingDialog();
+    showToast(context, "Your Order of $CURRENCY $price has been created");
+    price = 0;
+    update(["PRICE"]);
+  }
+
+  void getPopularitemList() {
+    final box = Boxes.getTransaction();
+    List<HiveDataModel> allSavedData = box.values.toList();
+    List<Category> popularItems = [];
+    for (var element in allSavedData) {
+      Category item = Category(id: element.id, selectedQuantity: 0.obs)
+        ..instock = element.instock
+        ..name = element.name
+        ..price = element.price;
+      popularItems.add(item);
+    }
+    productsModel?.popular = popularItems;
+    update();
+  }
+
+  Future<void> addPopularItems(Category dataModel) async {
+    final box = Boxes.getTransaction();
+    HiveDataModel? savedProduct = box.get(dataModel.id);
+    if (box.keys.length >= 5) {
+      box.deleteAt(0);
     }
 
-    showToast(context, "Your Order of $CURRENCY $price has been created");
-    update(["PRICE"]);
+    if (savedProduct == null) {
+      final hiveDataModel = HiveDataModel()
+        ..id = dataModel.id
+        ..instock = dataModel.instock!
+        ..name = dataModel.name!
+        ..price = dataModel.price!;
+      box.put(hiveDataModel.id, hiveDataModel);
+    }
   }
 }

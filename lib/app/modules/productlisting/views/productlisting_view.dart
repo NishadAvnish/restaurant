@@ -67,6 +67,10 @@ class ProductlistingView extends GetView<ProductlistingController>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (controller.productsModel?.popular != null)
+                          CategoryView(
+                              title: "Popular",
+                              items: controller.productsModel!.popular!),
                         if (controller.productsModel?.salads != null)
                           CategoryView(
                               title: "Salad",
