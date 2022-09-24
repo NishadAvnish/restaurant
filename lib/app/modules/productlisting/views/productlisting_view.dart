@@ -8,11 +8,15 @@ class ProductlistingView extends GetView<ProductlistingController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('ProductlistingView'),
+          title: const Text('Products'),
           centerTitle: true,
         ),
-        body: const Center(
-          child: SizedBox(),
-        ));
+        body: SingleChildScrollView(child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            
+          ],
+        ),)
+        );
   }
 }

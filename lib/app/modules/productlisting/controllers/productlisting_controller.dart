@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
+import 'package:restaurant/app/core/helper_ui.dart';
+import 'package:restaurant/app/core/product_json.dart';
+import 'package:restaurant/app/models/products_model.dart';
 
-class ProductlistingController extends GetxController {
-  //TODO: Implement ProductlistingController
+class ProductlistingController extends GetxController with HelperUI {
+  ProductsModel? productsModel;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -12,6 +14,7 @@ class ProductlistingController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    _fetchCategory();
   }
 
   @override
@@ -19,5 +22,10 @@ class ProductlistingController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
+  Future<void> _fetchCategory() async {
+    showLoadingDialog();
+    await Future.delayed(const Duration(seconds: 1));
+    productsModel = ProductsModel.fromJson(json);
+    hideLoadingDialog();
+  }
 }
