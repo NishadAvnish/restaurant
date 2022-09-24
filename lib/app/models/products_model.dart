@@ -1,3 +1,6 @@
+import 'package:restaurant/app/molecules/quantity_action_button.dart';
+import 'package:uuid/uuid.dart';
+
 class ProductsModel {
   List<Category>? popular = [];
   List<Category>? salads = [];
@@ -60,14 +63,25 @@ class ProductsModel {
 class Category {
   String? name;
   int? price;
+  late String id;
   bool? instock;
+  int selectedQuantity = 0;
+  void update(quantity) {
+    selectedQuantity = quantity;
+  }
 
-  Category({this.name, this.price, this.instock});
+  Category(
+      {this.name,
+      this.price,
+      this.instock,
+      this.selectedQuantity = 0,
+      required this.id});
 
   Category.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     price = json['price'];
     instock = json['instock'];
+    id = const Uuid().v1();
   }
 
   Map<String, dynamic> toJson() {

@@ -5,7 +5,8 @@ import 'package:restaurant/app/models/products_model.dart';
 
 class ProductlistingController extends GetxController with HelperUI {
   ProductsModel? productsModel;
-
+  List<Category> addedItem = <Category>[].obs;
+  double price = 0;
   @override
   void onInit() {
     super.onInit();
@@ -23,9 +24,32 @@ class ProductlistingController extends GetxController with HelperUI {
   }
 
   Future<void> _fetchCategory() async {
-    showLoadingDialog();
     await Future.delayed(const Duration(seconds: 1));
     productsModel = ProductsModel.fromJson(json);
-    hideLoadingDialog();
+    update();
+  }
+
+  void updateAddedItem(Category item, int quantity) {
+    int index = addedItem.indexWhere((element) => element.id == item.id);
+
+    price += quantity * (item.price ?? 1);
+
+    if (index == -1) {
+      item.update(quantity);
+      addedItem.add(item);
+    } else {
+      price -= addedItem[index].selectedQuantity * addedItem[index].price!;
+      addedItem[index].update(quantity);
+    }
+    print(price);
+
+    update(["PRICE"]);
+  }
+
+  void removeItem(String productId) {
+    int index = addedItem.indexWhere((element) => element.id == productId);
+    price -= addedItem[index].selectedQuantity * (addedItem[index].price ?? 1);
+    addedItem.removeAt(index);
+    update(["PRICE"]);
   }
 }

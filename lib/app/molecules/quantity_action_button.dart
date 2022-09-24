@@ -5,10 +5,8 @@ import 'package:restaurant/app/core/constants.dart';
 import 'package:restaurant/app/atoms/text_extension.dart';
 
 class QuantityEditor extends StatelessWidget {
-  final Function(int value) onAdd;
-  final Function(int value) onSubstract;
-  QuantityEditor({Key? key, required this.onAdd, required this.onSubstract})
-      : super(key: key);
+  final Function(int value) onUpdate;
+  QuantityEditor({Key? key, required this.onUpdate}) : super(key: key);
 
   ValueNotifier<int> quantity = ValueNotifier(0);
 
@@ -29,6 +27,7 @@ class QuantityEditor extends StatelessWidget {
                 ? GestureDetector(
                     onTap: () {
                       quantity.value = 1;
+                      onUpdate(1);
                     },
                     child: Center(
                         child:
@@ -41,7 +40,7 @@ class QuantityEditor extends StatelessWidget {
                           onTap: () {
                             if (quantityValue >= 1) {
                               quantity.value -= 1;
-                              onSubstract(quantityValue);
+                              onUpdate(quantity.value);
                             }
                           },
                           child: const Icon(
@@ -63,7 +62,7 @@ class QuantityEditor extends StatelessWidget {
                       GestureDetector(
                           onTap: () {
                             quantity.value += 1;
-                            onAdd(quantityValue);
+                            onUpdate(quantity.value);
                           },
                           child: const Icon(
                             Icons.add,

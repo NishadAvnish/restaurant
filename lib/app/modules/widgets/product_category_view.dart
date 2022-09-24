@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:restaurant/app/atoms/expandable_widget.dart';
 import 'package:restaurant/app/models/products_model.dart';
-import 'package:restaurant/app/molecules/product_list_item.dart';
+import 'package:restaurant/app/modules/widgets/product_list_item.dart';
 
-class CategoryView extends StatelessWidget{
+class CategoryView extends StatelessWidget {
   final String title;
   final List<Category> items;
   const CategoryView({

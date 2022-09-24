@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:restaurant/app/core/app_color.dart';
 import 'package:restaurant/app/core/constants.dart';
 import 'package:restaurant/app/atoms/custom_card.dart';
 import 'package:restaurant/app/core/spacers.dart';
 import 'package:restaurant/app/atoms/text_extension.dart';
 import 'package:restaurant/app/models/products_model.dart';
+import 'package:restaurant/app/modules/productlisting/controllers/productlisting_controller.dart';
 import 'package:restaurant/app/molecules/quantity_action_button.dart';
 
-class ProductListItem extends StatelessWidget {
+class ProductListItem extends GetView<ProductlistingController> {
   final Category product;
   const ProductListItem({Key? key, required this.product}) : super(key: key);
 
@@ -34,7 +36,13 @@ class ProductListItem extends StatelessWidget {
                   ],
                 ),
               ),
-              QuantityEditor(onAdd: (int val) {}, onSubstract: (int val) {})
+              QuantityEditor(onUpdate: (int val) {
+                if (val == 0) {
+                  controller.removeItem(product.id);
+                  return;
+                }
+                controller.updateAddedItem(product, val);
+              })
             ],
           ),
         ));
