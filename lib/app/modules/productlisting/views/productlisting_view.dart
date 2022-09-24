@@ -16,20 +16,28 @@ class ProductlistingView extends GetView<ProductlistingController>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Products'),
-          centerTitle: true,
-        ),
-        bottomNavigationBar: GetBuilder(
-            init: controller,
-            id: "PRICE",
-            builder: (_) {
-              return PersistanceNavButton(
-                widget: Container(
+      appBar: AppBar(
+        title: const Text('Products'),
+        centerTitle: true,
+      ),
+      bottomNavigationBar: GetBuilder(
+          init: controller,
+          id: "PRICE",
+          builder: (_) {
+            return PersistanceNavButton(
+              widget: GestureDetector(
+                onTap: controller.price == 0
+                    ? null
+                    : () {
+                        controller.placeOrder(context);
+                      },
+                child: Container(
                   width: double.infinity,
                   height: 48.h,
                   decoration: BoxDecoration(
-                      color: AppColors.COLOR_BLUE_500,
+                      color: controller.price == 0
+                          ? AppColors.COLOR_BLUE_500.withOpacity(0.4)
+                          : AppColors.COLOR_BLUE_500,
                       borderRadius:
                           BorderRadius.circular(VALUE_INPUT_BORDER_RADIUS)),
                   child: Row(
@@ -47,36 +55,38 @@ class ProductlistingView extends GetView<ProductlistingController>
                     ],
                   ),
                 ),
-              );
-            }),
-        body: GetBuilder(
-            init: controller,
-            builder: (_) {
-              return controller.productsModel == null
-                  ? getProgressIndicator()
-                  : SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (controller.productsModel?.salads != null)
-                            CategoryView(
-                                title: "Salad",
-                                items: controller.productsModel!.salads!),
-                          if (controller.productsModel?.soup != null)
-                            CategoryView(
-                                title: "Soup",
-                                items: controller.productsModel!.soup!),
-                          if (controller.productsModel?.chicken != null)
-                            CategoryView(
-                                title: "Chicken",
-                                items: controller.productsModel!.chicken!),
-                          if (controller.productsModel?.fruits != null)
-                            CategoryView(
-                                title: "Fruits",
-                                items: controller.productsModel!.fruits!)
-                        ],
-                      ),
-                    );
-            }));
+              ),
+            );
+          }),
+      body: GetBuilder(
+          init: controller,
+          builder: (_) {
+            return controller.productsModel == null
+                ? getProgressIndicator()
+                : SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (controller.productsModel?.salads != null)
+                          CategoryView(
+                              title: "Salad",
+                              items: controller.productsModel!.salads!),
+                        if (controller.productsModel?.soup != null)
+                          CategoryView(
+                              title: "Soup",
+                              items: controller.productsModel!.soup!),
+                        if (controller.productsModel?.chicken != null)
+                          CategoryView(
+                              title: "Chicken",
+                              items: controller.productsModel!.chicken!),
+                        if (controller.productsModel?.fruits != null)
+                          CategoryView(
+                              title: "Fruits",
+                              items: controller.productsModel!.fruits!)
+                      ],
+                    ),
+                  );
+          }),
+    );
   }
 }

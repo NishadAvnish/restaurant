@@ -36,12 +36,17 @@ class ProductListItem extends GetView<ProductlistingController> {
                   ],
                 ),
               ),
-              QuantityEditor(onUpdate: (int val) {
-                if (val == 0) {
-                  controller.removeItem(product.id);
-                  return;
-                }
-                controller.updateAddedItem(product, val);
+              Obx(() {
+                return QuantityEditor(
+                    initialQuantity: product.selectedQuantity.value,
+                    onUpdate: (int val) {
+                      if (val == 0) {
+                        controller.removeItem(product.id);
+                        return;
+                      }
+
+                      controller.updateAddedItem(product, val);
+                    });
               })
             ],
           ),

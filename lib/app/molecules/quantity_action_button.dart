@@ -6,12 +6,15 @@ import 'package:restaurant/app/atoms/text_extension.dart';
 
 class QuantityEditor extends StatelessWidget {
   final Function(int value) onUpdate;
-  QuantityEditor({Key? key, required this.onUpdate}) : super(key: key);
-
-  ValueNotifier<int> quantity = ValueNotifier(0);
+  final int initialQuantity;
+  QuantityEditor(
+      {Key? key, required this.onUpdate, required this.initialQuantity})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<int> quantity = ValueNotifier(initialQuantity);
+
     return Container(
       height: 34.h,
       constraints: BoxConstraints(minWidth: 70.w),

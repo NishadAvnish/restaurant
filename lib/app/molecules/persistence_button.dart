@@ -17,7 +17,7 @@ class PersistanceNavButton extends StatelessWidget {
       children: [
         if (widget != null)
           Container(
-            height: 92.h,
+            height: 75.h,
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             color: AppColors.COLOR_WHITE,
             child: Center(

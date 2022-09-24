@@ -1,3 +1,4 @@
+import 'package:get/state_manager.dart';
 import 'package:restaurant/app/molecules/quantity_action_button.dart';
 import 'package:uuid/uuid.dart';
 
@@ -65,22 +66,23 @@ class Category {
   int? price;
   late String id;
   bool? instock;
-  int selectedQuantity = 0;
+  RxInt selectedQuantity = 0.obs;
   void update(quantity) {
-    selectedQuantity = quantity;
+    selectedQuantity.value = quantity;
   }
 
   Category(
       {this.name,
       this.price,
       this.instock,
-      this.selectedQuantity = 0,
+      required this.selectedQuantity,
       required this.id});
 
   Category.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     price = json['price'];
     instock = json['instock'];
+    selectedQuantity = 0.obs;
     id = const Uuid().v1();
   }
 
