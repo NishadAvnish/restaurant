@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:restaurant/app/core/helper_ui.dart';
+import 'package:restaurant/app/atoms/helper_ui.dart';
 import 'package:restaurant/app/core/product_json.dart';
 import 'package:restaurant/app/models/products_model.dart';
 

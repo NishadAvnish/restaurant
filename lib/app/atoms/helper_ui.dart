@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:restaurant/app/core/app_color.dart';
 import 'package:get/get.dart';
 
-class HelperUI {
-  static Widget getProgressIndicator([Color? color = AppColors.COLOR_WHITE]) {
+mixin HelperUI {
+  Widget getProgressIndicator([Color? color = AppColors.COLOR_BLUE_500]) {
     return Center(
       child: SizedBox(
         width: 30,
