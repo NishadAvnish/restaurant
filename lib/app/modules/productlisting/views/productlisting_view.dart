@@ -67,23 +67,28 @@ class ProductlistingView extends GetView<ProductlistingController>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (controller.productsModel?.popular != null)
+                        CustomSpacers.height14,
+                        if (controller.productsModel?.popular?.isNotEmpty ??
+                            false)
                           CategoryView(
                               title: "Popular",
                               items: controller.productsModel!.popular!),
-                        if (controller.productsModel?.salads != null)
+                        if (controller.productsModel?.salads?.isNotEmpty ??
+                            false)
                           CategoryView(
                               title: "Salad",
                               items: controller.productsModel!.salads!),
-                        if (controller.productsModel?.soup != null)
+                        if (controller.productsModel?.soup?.isNotEmpty ?? false)
                           CategoryView(
                               title: "Soup",
                               items: controller.productsModel!.soup!),
-                        if (controller.productsModel?.chicken != null)
+                        if (controller.productsModel?.chicken?.isNotEmpty ??
+                            false)
                           CategoryView(
                               title: "Chicken",
                               items: controller.productsModel!.chicken!),
-                        if (controller.productsModel?.fruits != null)
+                        if (controller.productsModel?.fruits?.isNotEmpty ??
+                            false)
                           CategoryView(
                               title: "Fruits",
                               items: controller.productsModel!.fruits!)
