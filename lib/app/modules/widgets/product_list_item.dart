@@ -59,11 +59,11 @@ class ProductListItem extends GetView<ProductlistingController> {
                     initialQuantity: product.selectedQuantity.value,
                     onUpdate: (int val) {
                       if (val == 0) {
-                        controller.removeItem(product.id);
+                        controller.removeCartAddedItem(product.id);
                         return;
                       }
 
-                      controller.updateAddedItem(product, val);
+                      controller.updateCartAddedItem(product, val);
                     });
               })
             ],

@@ -54,7 +54,7 @@ class ProductlistingController extends GetxController with HelperUI {
     update();
   }
 
-  void updateAddedItem(Category item, int quantity) {
+  void updateCartAddedItem(Category item, int quantity) {
     int index = addedItem.indexWhere((element) => element.id == item.id);
 
     price += quantity * (item.price ?? 1);
@@ -68,11 +68,10 @@ class ProductlistingController extends GetxController with HelperUI {
       _tempProduct.update(quantity);
       addedItem[index] = _tempProduct;
     }
-
     update(["PRICE"]);
   }
 
-  void removeItem(String productId) {
+  void removeCartAddedItem(String productId) {
     int index = addedItem.indexWhere((element) => element.id == productId);
     price -= addedItem[index].selectedQuantity * (addedItem[index].price ?? 1);
     addedItem.removeAt(index);
@@ -165,7 +164,6 @@ class ProductlistingController extends GetxController with HelperUI {
     int maxCount = 0;
     List<HiveDataModel> productList = box.values.toList();
     for (HiveDataModel item in productList) {
-      print(item.id);
       if (item.count > maxCount) {
         maxId = item.id;
         maxCount = item.count;
