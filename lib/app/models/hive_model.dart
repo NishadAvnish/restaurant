@@ -11,4 +11,8 @@ class HiveDataModel extends HiveObject {
   late String id;
   @HiveField(3)
   late bool instock;
+  @HiveField(4)
+  bool? bestSeller = false;
+  @HiveField(5)
+  late int count;
 }

@@ -30,9 +30,28 @@ class ProductlistingController extends GetxController with HelperUI {
   }
 
   Future<void> fetchCategory() async {
+    price = 0;
+    addedItem.clear();
+
     await Future.delayed(const Duration(seconds: 1));
     productsModel = ProductsModel.fromJson(json);
     getPopularitemList();
+  }
+
+  void getPopularitemList() {
+    final box = Boxes.getTransaction();
+    List<HiveDataModel> allSavedData = box.values.toList();
+    List<Category> popularItems = [];
+    for (var element in allSavedData) {
+      Category item = Category(id: element.id, selectedQuantity: 0.obs)
+        ..instock = element.instock
+        ..name = element.name
+        ..price = element.price
+        ..bestSeller = element.bestSeller ?? false;
+      popularItems.add(item);
+    }
+    productsModel?.popular = popularItems;
+    update();
   }
 
   void updateAddedItem(Category item, int quantity) {
@@ -45,7 +64,9 @@ class ProductlistingController extends GetxController with HelperUI {
       addedItem.add(item);
     } else {
       price -= addedItem[index].selectedQuantity * addedItem[index].price!;
-      addedItem[index].update(quantity);
+      Category _tempProduct = addedItem[index];
+      _tempProduct.update(quantity);
+      addedItem[index] = _tempProduct;
     }
 
     update(["PRICE"]);
@@ -63,6 +84,7 @@ class ProductlistingController extends GetxController with HelperUI {
     for (var element in addedItem) {
       await addPopularItems(element);
     }
+    setBestSeller();
 
     // clear popular
     for (var ele in productsModel!.popular!) {
@@ -108,40 +130,54 @@ class ProductlistingController extends GetxController with HelperUI {
     hideLoadingDialog();
     showToast(context, "Your Order of $CURRENCY $price has been created");
     price = 0;
+    addedItem.clear();
     update(["PRICE"]);
-  }
-
-  void getPopularitemList() {
-    final box = Boxes.getTransaction();
-    List<HiveDataModel> allSavedData = box.values.toList();
-    List<Category> popularItems = [];
-    for (var element in allSavedData) {
-      Category item = Category(id: element.id, selectedQuantity: 0.obs)
-        ..instock = element.instock
-        ..name = element.name
-        ..price = element.price;
-      popularItems.add(item);
-    }
-    productsModel?.popular = popularItems;
-    print(productsModel?.popular?.length);
-    update();
   }
 
   Future<void> addPopularItems(Category dataModel) async {
     final box = Boxes.getTransaction();
-    if (box.get(dataModel.id) != null) return;
-    HiveDataModel? savedProduct = box.get(dataModel.id);
-    if (box.keys.length >= 5) {
-      box.deleteAt(0);
+    final hiveDataModel = HiveDataModel()
+      ..id = dataModel.id
+      ..instock = dataModel.instock!
+      ..name = dataModel.name!
+      ..price = dataModel.price!
+      ..count = dataModel.selectedQuantity.value;
+
+    List<HiveDataModel> productList = box.values.toList();
+    productList.sort((a, b) => a.count.compareTo(b.count));
+    HiveDataModel? savedProduct = box.get(hiveDataModel.id);
+
+    if (savedProduct != null) {
+      hiveDataModel.count += savedProduct.count;
+      box.delete(dataModel.id);
+      box.put(dataModel.id, hiveDataModel);
+    } else {
+      if (box.keys.length >= 3) {
+        box.delete(productList[0].id);
+      }
+      box.put(hiveDataModel.id, hiveDataModel);
+    }
+  }
+
+  void setBestSeller() {
+    final box = Boxes.getTransaction();
+    String? maxId;
+    int maxCount = 0;
+    List<HiveDataModel> productList = box.values.toList();
+    for (HiveDataModel item in productList) {
+      print(item.id);
+      if (item.count > maxCount) {
+        maxId = item.id;
+        maxCount = item.count;
+      }
+      box.put(item.id, item..bestSeller = false);
     }
 
-    if (savedProduct == null) {
-      final hiveDataModel = HiveDataModel()
-        ..id = dataModel.id
-        ..instock = dataModel.instock!
-        ..name = dataModel.name!
-        ..price = dataModel.price!;
-      box.put(hiveDataModel.id, hiveDataModel);
+    HiveDataModel? product = box.get(maxId!);
+
+    if (product != null) {
+      product.bestSeller = true;
+      box.put(product.id, product);
     }
   }
 }

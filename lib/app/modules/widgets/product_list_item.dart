@@ -28,9 +28,27 @@ class ProductListItem extends GetView<ProductlistingController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    (product.name ?? "").body16(
-                        fontWeight: FontWeight.w500,
-                        textColor: AppColors.COLOR_BLACK),
+                    Row(
+                      children: [
+                        (product.name ?? "").body16(
+                            fontWeight: FontWeight.w500,
+                            textColor: AppColors.COLOR_BLACK),
+                        if (product.bestSeller!) ...[
+                          CustomSpacers.width10,
+                          Container(
+                            padding: EdgeInsets.all(3.h),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: AppColors.COLOR_BLUE_500),
+                                borderRadius: BorderRadius.circular(
+                                    VALUE_INPUT_BORDER_RADIUS)),
+                            child: "BestSeller".body14(
+                              textColor: AppColors.COLOR_BLUE_500,
+                            ),
+                          ),
+                        ]
+                      ],
+                    ),
                     CustomSpacers.height4,
                     ("$CURRENCY ${product.price ?? 0}").body16(),
                   ],

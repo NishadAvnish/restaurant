@@ -67,6 +67,7 @@ class Category {
   late String id;
   bool? instock;
   RxInt selectedQuantity = 0.obs;
+  bool? bestSeller = false;
   void update(quantity) {
     selectedQuantity.value = quantity;
   }
@@ -75,6 +76,7 @@ class Category {
       {this.name,
       this.price,
       this.instock,
+      this.bestSeller,
       required this.selectedQuantity,
       required this.id});
 
@@ -83,7 +85,8 @@ class Category {
     price = json['price'];
     instock = json['instock'];
     selectedQuantity = 0.obs;
-    id = const Uuid().v1();
+    bestSeller = false;
+    id = json['id'].toString();
   }
 
   Map<String, dynamic> toJson() {

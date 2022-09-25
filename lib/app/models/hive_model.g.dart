@@ -20,13 +20,15 @@ class HiveDataModelAdapter extends TypeAdapter<HiveDataModel> {
       ..name = fields[0] as String
       ..price = fields[1] as int
       ..id = fields[2] as String
-      ..instock = fields[3] as bool;
+      ..instock = fields[3] as bool
+      ..bestSeller = fields[4] as bool?
+      ..count = fields[5] as int;
   }
 
   @override
   void write(BinaryWriter writer, HiveDataModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -34,7 +36,11 @@ class HiveDataModelAdapter extends TypeAdapter<HiveDataModel> {
       ..writeByte(2)
       ..write(obj.id)
       ..writeByte(3)
-      ..write(obj.instock);
+      ..write(obj.instock)
+      ..writeByte(4)
+      ..write(obj.bestSeller)
+      ..writeByte(5)
+      ..write(obj.count);
   }
 
   @override
